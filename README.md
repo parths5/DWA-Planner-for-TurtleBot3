@@ -2,41 +2,65 @@
 
 ## Overview
 
-This project implements a custom **Dynamic Window Approach (DWA) local planner** for a **TurtleBot3** in **ROS2 Humble**. The planner is written from scratch without using `nav2_dwb_controller` and generates velocity commands (`/cmd_vel`) for safe obstacle avoidance and goal navigation.
+This project presents a custom implementation of a **Dynamic Window Approach (DWA) local planner** for **TurtleBot3** robots operating in **ROS2 Humble**. Developed from scratch. this planner computes velocity commands (`/cmd_vel`) to enable autonomous navigation with effective obstacle avoidance and goal-directed movement.
 
-## Algorithm Description
+## Algorithm & Features
 
-The Dynamic Window Approach (DWA) is a local path planning algorithm that:
+The Dynamic Window Approach (DWA) planner operates through a four-stage process that runs iteratively:
 
-1. **Samples velocity commands** within dynamic constraints (max linear and angular velocities)
-2. **Predicts trajectories** by simulating robot motion forward in time for each velocity sample
-3. **Evaluates trajectories** using a multi-objective cost function that considers:
-   - **Distance to goal**: Prefers trajectories that bring the robot closer to the target
-   - **Obstacle avoidance**: Heavily penalizes trajectories that would cause collisions or get too close to obstacles
-   - **Path smoothness**: Prefers smoother trajectories with less angular velocity changes
-4. **Selects the best trajectory** based on the cost function and publishes the corresponding velocity command
+1. **Velocity Sampling**: The planner generates candidate velocity pairs (linear and angular) by randomly sampling within predefined dynamic constraints. Each iteration evaluates 15,000 potential velocity commands, ensuring comprehensive coverage of the robot's motion capabilities.
+2. **Trajectory Prediction**: For each sampled velocity command, the algorithm simulates the robot's motion forward in time (10-second prediction horizon) by integrating kinematic equations. This produces a predicted path that the robot would follow if it executed that particular velocity command.
+3. **Trajectory Evaluation**: Each predicted trajectory is scored using a multi-objective cost function that balances three key factors:
 
-The implementation uses a gradient-based obstacle cost function that provides smooth penalties based on proximity to obstacles, ensuring safe navigation even in cluttered environments.
+   - **Goal Proximity**: Rewards trajectories that minimize the distance to the target goal position
+   - **Obstacle Avoidance**: Applies gradient-based penalties that increase exponentially as trajectories approach obstacles detected by the laser scanner, with collision paths receiving severe penalties
+   - **Motion Smoothness**: Favors trajectories with lower angular velocities to promote stable, predictable motion
+4. **Optimal Command Selection**: The trajectory with the highest combined score is selected, and its corresponding velocity command is published to `/cmd_vel` for execution.
 
-## Features
+**ROS2 Integration**:
 
-- ✅ Samples velocity commands within dynamic constraints
-- ✅ Predicts trajectories based on sampled velocities
-- ✅ Evaluates trajectories using a comprehensive cost function (goal distance, obstacle avoidance, and smoothness)
-- ✅ Selects the best trajectory and publishes velocity commands (`/cmd_vel`)
-- ✅ Subscribes to **Odometry (`/odom`)** and **LaserScan (`/scan`)**
-- ✅ Uses **RViz Markers** to visualize sampled trajectories
-- ✅ Works in **Gazebo** with obstacles for real-world testing
-- ✅ Continuous goal input with 120-second timeout per goal
-- ✅ Comprehensive debugging messages for trajectory evaluation and decision-making
+- Subscribes to **Odometry (`/odom`)** for real-time robot pose estimation
+- Subscribes to **LaserScan (`/scan`)** for obstacle detection and proximity sensing
+- Publishes velocity commands to **`/cmd_vel`** for robot control
+- Publishes **RViz Markers** to `/visual_paths` for trajectory visualization in RViz
+
+**Additional Capabilities**:
+
+- Continuous goal input system with automatic prompting after goal completion or timeout (120 seconds)
+- Comprehensive file-based logging system that records detailed trajectory evaluation metrics
+- Terminal output displays real-time velocities and remaining time for goal completion
+- Tested and validated in Gazebo with multiple goal states. Some are trickier than others and the planner doesn't have a perfect success rate
+
+## Demo Videos
+
+### Gazebo Simulation
+
+The following video demonstrates the DWA planner navigating a TurtleBot3 robot in Gazebo while avoiding obstacles:
+
+<video width="800" controls>
+  <source src="screengrabs/gazebo.mp4" type="video/mp4">
+  Your browser does not support the video tag. [Download video](screengrabs/gazebo.mp4)
+</video>
+
+### Terminal Output
+
+This video shows the terminal output displaying real-time velocities and navigation status:
+
+<video width="800" controls>
+  <source src="screengrabs/terminal.mp4" type="video/mp4">
+  Your browser does not support the video tag. [Download video](screengrabs/terminal.mp4)
+</video>
+
+**Note**: GitHub README files support video playback through HTML5 video tags. Click the links above or use the video players to view the demonstrations.
 
 ## Installation & Setup
 
 ### Prerequisites
 
-- ROS2 Humble installed
+- ROS2 Humble installed (includes `rclpy`, `geometry_msgs`, `nav_msgs`, `sensor_msgs`, `visualization_msgs`)
 - Gazebo simulator
-- Python 3.10+ with numpy and transforms3d
+- Python 3.10+
+- TurtleBot3 simulation packages
 
 ### 1. Install ROS2 Humble and TurtleBot3 Simulation
 
@@ -50,9 +74,13 @@ Follow the official TurtleBot3 setup guide: [TurtleBot3 Installation](https://em
 
 ### 2. Install Python Dependencies
 
+The planner requires the following Python packages:
+
 ```sh
 pip3 install numpy transforms3d
 ```
+
+**Note**: ROS2 message packages (`rclpy`, `geometry_msgs`, `nav_msgs`, `sensor_msgs`, `visualization_msgs`) are included with ROS2 Humble installation and do not need separate installation.
 
 ### 3. Build This Package
 
