@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<!--
+  Dynamic Window Approach (DWA) Local Planner for TurtleBot3 in ROS2 Humble with Gazebo Simulation
+  
+  Author: Parth Singh
+  Institution: Carnegie Mellon University
+  Program: MS Robotics Systems Development
+-->
+<package format="3">
+  <name>dwa_planner</name>
+  <version>0.1.0</version>
+  <description>Custom Dynamic Window Approach (DWA) local planner for ROS2 TurtleBot3 navigation</description>
+  <maintainer email="parthsin@cs.cmu.edu">Parth Singh</maintainer>
+  <license>MIT</license>
+
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>visualization_msgs</depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
