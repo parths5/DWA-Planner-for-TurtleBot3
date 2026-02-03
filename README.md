@@ -1,6 +1,6 @@
 # Dynamic Window Approach Local Planner for ROS2 Humble
 
-## Overview
+## Summary
 
 This project presents a custom implementation of a **Dynamic Window Approach (DWA) local planner** for **TurtleBot3** robots operating in **ROS2 Humble**. Developed from scratch. this planner computes velocity commands (`/cmd_vel`) to enable autonomous navigation with effective obstacle avoidance and goal-directed movement.
 
@@ -37,27 +37,19 @@ The Dynamic Window Approach (DWA) planner operates through a four-stage process 
 
 The following video demonstrates the DWA planner navigating a TurtleBot3 robot in Gazebo while avoiding obstacles:
 
-<video width="800" controls>
-  <source src="screengrabs/gazebo.mp4" type="video/mp4">
-  Your browser does not support the video tag. [Download video](screengrabs/gazebo.mp4)
-</video>
+![Gazebo Simulation Demo](screengrabs/gazebo.gif)
 
 ### Terminal Output
 
 This video shows the terminal output displaying real-time velocities and navigation status:
 
-<video width="800" controls>
-  <source src="screengrabs/terminal.mp4" type="video/mp4">
-  Your browser does not support the video tag. [Download video](screengrabs/terminal.mp4)
-</video>
-
-**Note**: GitHub README files support video playback through HTML5 video tags. Click the links above or use the video players to view the demonstrations.
+![Terminal Output Demo](screengrabs/terminal.gif)
 
 ## Installation & Setup
 
 ### Prerequisites
 
-- ROS2 Humble installed (includes `rclpy`, `geometry_msgs`, `nav_msgs`, `sensor_msgs`, `visualization_msgs`)
+- ROS2 Humble
 - Gazebo simulator
 - Python 3.10+
 - TurtleBot3 simulation packages
@@ -96,6 +88,7 @@ source install/setup.bash  # or setup.zsh if using zsh
 **Terminal 1 - Launch Gazebo:**
 
 ```sh
+source /opt/ros/humble/setup.bash
 export TURTLEBOT3_MODEL=burger
 ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 ```
@@ -135,20 +128,6 @@ In RViz:
 - After reaching a goal (or 120-second timeout), it automatically prompts for the next goal
 - The robot will navigate to each goal while avoiding obstacles
 
-### Debugging Messages
-
-**Terminal Output:**
-The terminal displays only essential information:
-
-- Current linear and angular velocities
-- Time remaining to reach the goal
-
-Example terminal output:
-
-```
-Velocities - Linear: 0.100 m/s, Angular: 0.250 rad/s | Time remaining: 45.3s
-```
-
 **Detailed Log Files:**
 All detailed debugging information is saved to log files in `~/.ros/dwa_planner_logs/`. Each session creates a timestamped log file.
 
@@ -156,16 +135,11 @@ All detailed debugging information is saved to log files in `~/.ros/dwa_planner_
 
 ### Cost Function Weights
 
-- **Goal weight**: 2.0 (reduced to prioritize safety)
-- **Obstacle weight**: 2.0 (high priority for collision avoidance)
-- **Heading weight**: 1.0 (alignment with goal direction)
-- **Smoothness weight**: 0.3 (preference for smooth paths)
+Cost structure for the objective can be seen in `dwa_planner.py` . If you wish to clone this repo and tune it better than me please submit a pull request!
 
-### Key Parameters
+### Safety Parameters
 
 - **Robot radius**: 0.2 m
-- **Safety margin**: 0.5 m
-- **Minimum safe distance**: 0.7 m
 - **Max linear velocity**: 0.10 m/s
 - **Max angular velocity**: 1.8 rad/s
 
