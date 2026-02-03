@@ -44,11 +44,9 @@ The implementation uses a gradient-based obstacle cost function that provides sm
 
 Follow the official installation guide: [ROS2 Humble Installation](https://docs.ros.org/en/humble/Installation.html)
 
-
 **Install TurtleBot3:**
 
 Follow the official TurtleBot3 setup guide: [TurtleBot3 Installation](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/)
-
 
 ### 2. Install Python Dependencies
 
@@ -96,7 +94,7 @@ rviz2
 
 In RViz:
 
-- Click **Add → By Topic** and select **visual_paths** to view the planned trajectories
+- Click **Add → By Topic** and select **visual_paths**(only available while planner is running) to view the planned trajectories
 - Add **LaserScan** (`/scan`) to see obstacle detection
 - Add **TF** to visualize coordinate frames
 - Add **RobotModel** to see the robot
@@ -113,33 +111,18 @@ In RViz:
 
 **Terminal Output:**
 The terminal displays only essential information:
+
 - Current linear and angular velocities
 - Time remaining to reach the goal
 
 Example terminal output:
+
 ```
 Velocities - Linear: 0.100 m/s, Angular: 0.250 rad/s | Time remaining: 45.3s
 ```
 
 **Detailed Log Files:**
-All detailed debugging information is saved to log files in `~/.ros/dwa_planner_logs/`. Each session creates a timestamped log file (e.g., `dwa_planner_20260203_143022.log`).
-
-The log files contain:
-- **Trajectory sampling**: Number of paths evaluated per iteration
-- **Cost function breakdown**: Goal distance, obstacle avoidance, and smoothness costs
-- **Navigation status**: Distance to goal, obstacle proximity, and goal completion
-- **Initialization messages**: Planner configuration and setup information
-- **Goal status**: Goal reached notifications and timeout warnings
-
-Example log file content:
-```
-2026-02-03 14:30:22 - INFO - DWA Planner initialized. Starting navigation loop.
-2026-02-03 14:30:25 - INFO - Trajectory Evaluation (Iteration 20)
-2026-02-03 14:30:25 - INFO -   Sampled 15000 trajectories | Best score: -1253.60
-2026-02-03 14:30:25 - INFO -   Cost breakdown - Goal: -3.45, Obstacle: -1250.00, Smoothness: -0.15
-2026-02-03 14:30:25 - INFO -   Navigation status - Distance to goal: 1.23 m | Min obstacle distance: 0.85 m
-2026-02-03 14:30:27 - INFO - Goal reached at (2.0, 1.0)! Time taken: 12.45 seconds.
-```
+All detailed debugging information is saved to log files in `~/.ros/dwa_planner_logs/`. Each session creates a timestamped log file.
 
 ## Implementation Details
 
@@ -150,7 +133,7 @@ Example log file content:
 - **Heading weight**: 1.0 (alignment with goal direction)
 - **Smoothness weight**: 0.3 (preference for smooth paths)
 
-### Safety Parameters
+### Key Parameters
 
 - **Robot radius**: 0.2 m
 - **Safety margin**: 0.5 m
@@ -167,7 +150,7 @@ Example log file content:
 ## Known Limitations & Future Improvements
 
 - The planner uses a simplified collision checking algorithm that could be enhanced with more sophisticated footprint checking
-- Cost function weights may need tuning for different environments or robot types
+- Cost function weights need tuning for better obstacle avoidance or for adapting to new environments
 - The current implementation uses random sampling; grid-based or adaptive sampling could improve efficiency
 - Integration with a global planner for long-range navigation would enhance the system
 
