@@ -132,7 +132,6 @@ def check_for_collisions(path):
     min_safe_distance = robot_radius + safety_margin
     
     # Cost parameters - tuned to be aggressive, robot was colliding often while testing
-    # now on setting the first goal there is almost a 100% chance of reaching the goal but when I set the second goal without resetting the robot's starting position, collision chances increase while going to the second goal!
     collision_penalty = -10000000
     proximity_weight = -20000
     
