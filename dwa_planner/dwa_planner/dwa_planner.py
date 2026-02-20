@@ -158,7 +158,6 @@ def check_for_collisions(path):
         path_angle = math.atan2(rel_y, rel_x)
         
         # Convert angle to scan index
-        # Laser scan typically ranges from angle_min to angle_max
         angle_min = laser_scan_data.angle_min
         angle_max = laser_scan_data.angle_max
         angle_increment = laser_scan_data.angle_increment
