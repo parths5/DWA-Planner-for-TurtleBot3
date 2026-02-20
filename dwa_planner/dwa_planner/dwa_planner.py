@@ -118,6 +118,7 @@ def check_for_collisions(path):
     #Returns a gradient cost: more negative = closer to obstacles, 0 = safe.
     #If there is no scan data or odom data, return -infinity
     if laser_scan_data is None or robot_odom_data is None:
+        print("Robot data is not available!")
         return -float('inf')
 
     # Robot's current position and orientation
