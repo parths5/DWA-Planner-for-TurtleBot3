@@ -328,7 +328,7 @@ def movement_loop(node, cmd_publisher, path_publisher, max_speed, max_turn, step
 
     path_generator = generate_infinite_paths(max_speed, max_turn, step_time)
     # Increased samples for better path selection
-    num_samples = 15000
+    num_samples = 2000    #changed for trials
     possible_paths = [next(path_generator) for i in range(num_samples)]
 
     result = choose_best_path(node, possible_paths)
